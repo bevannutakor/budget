@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import { Button, Stack } from 'react-bootstrap';
 
@@ -8,13 +8,35 @@ import CreateBudgetModal from './Components/CreateBudgetModal';
 const App = () => {
 
   const [isOpen, setIsOpen] = useState(false); 
-  const [budgets, setBudgets] = useState([]);
+  const [budgets, setBudgets] = useState({
+    name: '',
+    amount: '',
+    id: uniqid()
+  });
+  const [budgetArray, setBudgetArray] = useState([]);
   const [expenses, setExpenses] = useState([]);
-  
 
-  const addBudget = (e) => {
-    
+
+  const handleChange = (e) => {
+    setBudgets({
+      ...budgets,
+      [e.target.name]: e.target.value,
+
+    })
   }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setBudgetArray(prevArray => [...prevArray, budgets])
+    setBudgets({name:'', amount:'', id:uniqid()})
+  }
+
+  //THIS IS WEIRD
+  useEffect(() => {
+    console.log(budgetArray);
+  })
+  
+  //need to store attributes into localstorage instead of state array
   const useLocalStorage = (key, initialValue) => {
     return null;
   }
@@ -26,7 +48,7 @@ const App = () => {
         <Button variant="primary" onClick={() => setIsOpen(true)}>Add Budget</Button>
         <Button variant="outline-primary">Add Expense</Button>
       </Stack>
-      {isOpen && <CreateBudgetModal isOpen={isOpen} setIsOpen={setIsOpen} />}
+      {isOpen && <CreateBudgetModal isOpen={isOpen} setIsOpen={setIsOpen} handleChange={handleChange} budgets={budgets} handleSubmit={handleSubmit}/>}
     </Container>
   )
 }
