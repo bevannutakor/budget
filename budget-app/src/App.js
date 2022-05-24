@@ -14,7 +14,7 @@ const App = () => {
   const [viewExpenseModal, setViewExpenseModal] = useState(false); 
 
   const [budgetArray, setBudgetArray] = useLocalStorage('budgets', []);
-  const [expensesArray, setExpensesArray] = useLocalStorage('expenses', []);
+  const [expensesArray, setExpensesArray] = useState([])
 
   const [expense, setExpense] = useState({
     name: '',
@@ -33,10 +33,12 @@ const App = () => {
     setBudgets({
       ...budgets,
       [e.target.name]: e.target.value,
-
     })
 
-    
+    setExpense({
+      ...expense,
+      [e.target.name]: e.target.value
+    })
   }
 
   const handleBudgetSubmit = (e) => {
@@ -45,6 +47,16 @@ const App = () => {
     setBudgets({name:'', amount:'', id:uniqid()})
   }
 
+  const submitExpense = (e) => {
+    e.preventDefault()
+    setExpensesArray(prevArray => [...prevArray, expense])
+    setExpense({name: '', cost:'', id:uniqid()})
+  }
+
+  useEffect(() => {
+    console.log(expensesArray);
+  })
+
   return(
     <Container className="my-4">
       <Stack direction="horizontal" gap="2" className="mb-4">
@@ -52,9 +64,10 @@ const App = () => {
         <Button variant="primary" onClick={() => setIsOpen(true)}>Add Budget</Button>
         <Button variant="outline-primary">Add Expense</Button>
       </Stack>
+
       {isOpen && <CreateBudgetModal isOpen={isOpen} setIsOpen={setIsOpen} handleChange={handleChange} budgets={budgets} handleBudgetSubmit={handleBudgetSubmit}/>}
 
-      {addExpenseModal && <AddExpenseModal addExpenseModal={addExpenseModal} setAddExpenseModal={setAddExpenseModal} />}
+      {addExpenseModal && <AddExpenseModal expense={expense} addExpenseModal={addExpenseModal} setAddExpenseModal={setAddExpenseModal} submitExpense={submitExpense}/>}
 
       <BudgetCard budgetArray={budgetArray} setAddExpenseModal={setAddExpenseModal} setViewExpenseModal={setViewExpenseModal}/>
     </Container>
