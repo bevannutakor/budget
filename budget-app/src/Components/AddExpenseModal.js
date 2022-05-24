@@ -1,39 +1,37 @@
 import {Form, Button, Modal} from 'react-bootstrap';
 
-const CreateBudgetModal = (props) => {
-    const {isOpen, setIsOpen, budgets, handleChange, handleBudgetSubmit} = props;
+const AddExpenseModal = (props) => {
+    const {addExpenseModal, setAddExpenseModal} = props;
     return(
         <>
             <Form>
-                <Modal show={isOpen} onHide={() => setIsOpen(false)}>
+                <Modal show={addExpenseModal} onHide={() => setAddExpenseModal(false)}>
                     <Modal.Header closeButton>
-                        <Modal.Title>New Budget</Modal.Title>
+                        <Modal.Title>New Expense</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <Form.Group>
-                            <Form.Label>Name</Form.Label>
+                            <Form.Label>Expense Name</Form.Label>
                             <Form.Control 
                                 name="name" 
-                                onChange={handleChange} 
-                                value={budgets.name}  
+                                  
                                 type="text" 
                                 placeholder="Enter Budget Name"
                             />
                         </Form.Group>
 
                         <Form.Group>
-                            <Form.Label>Amount</Form.Label>
+                            <Form.Label>Cost</Form.Label>
                             <Form.Control
-                                name="amount"
-                                onChange={handleChange}
-                                value={budgets.amount} 
+                                name="cost"
+                                
                                 type="text" 
                                 placeholder="Enter Amount"/>
                         </Form.Group>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button type="submit" variant="primary" onClick={handleBudgetSubmit}>
-                            Add Budget
+                        <Button type="submit" variant="primary" >
+                            Add Expense
                         </Button>
                     </Modal.Footer>
                 </Modal>
@@ -43,4 +41,4 @@ const CreateBudgetModal = (props) => {
     )
 }
 
-export default CreateBudgetModal;
+export default AddExpenseModal;
