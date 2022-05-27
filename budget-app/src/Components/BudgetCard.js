@@ -1,7 +1,7 @@
 import {Card, Button, Container, Row, Col, Stack, ProgressBar} from 'react-bootstrap'
 
 const BudgetCard = (props) => {
-    const {budgetArray, setAddExpenseModal, setViewExpenseModal} = props;
+    const {budgetArray, openExpenseModal} = props;
 
     return(
         <Container>
@@ -19,9 +19,9 @@ const BudgetCard = (props) => {
                                 </Card.Body>
                                 <Card.Footer>
                                     <Stack direction="horizontal" gap="2" className="mt-3">
-                                        <Button onClick={() => setAddExpenseModal(true)}>Add Expense</Button>
+                                        <Button onClick={() => openExpenseModal(budgets.id)}>Add Expense</Button>
                                         <Button 
-                                            onClick={() => setViewExpenseModal(true)} className="float-end" variant="outline-primary">
+                                            className="float-end" variant="outline-primary">
                                             View All Expenses
                                         </Button>
                                     </Stack>

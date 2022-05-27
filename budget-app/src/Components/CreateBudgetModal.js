@@ -27,7 +27,7 @@ const CreateBudgetModal = (props) => {
                                 name="amount"
                                 onChange={handleChange}
                                 value={budgets.amount} 
-                                type="text" 
+                                type="number" 
                                 placeholder="Enter Amount"/>
                         </Form.Group>
                     </Modal.Body>

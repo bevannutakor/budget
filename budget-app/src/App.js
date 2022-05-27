@@ -11,23 +11,24 @@ import AddExpenseModal from './Components/AddExpenseModal';
 const App = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [addExpenseModal, setAddExpenseModal] = useState(false);
-  const [viewExpenseModal, setViewExpenseModal] = useState(false); 
+  const [viewExpenseModal, setViewExpenseModal] = useState(false);
+  const [testId, setTestId] = useState(''); 
 
   const [budgetArray, setBudgetArray] = useLocalStorage('budgets', []);
   const [expensesArray, setExpensesArray] = useState([])
 
-  const [expense, setExpense] = useState({
-    name: '',
-    cost: '',
-    id: uniqid()
-  })
   const [budgets, setBudgets] = useState({
     name: '',
-    amount: '',
+    amount: 0,
     id: uniqid(),
     expenses: []
   });
 
+  const [expense, setExpense] = useState({
+    expense: '',
+    cost: 0,
+    id: uniqid() //needed for the view
+  })
 
   const handleChange = (e) => {
     setBudgets({
@@ -37,7 +38,7 @@ const App = () => {
 
     setExpense({
       ...expense,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     })
   }
 
@@ -47,14 +48,23 @@ const App = () => {
     setBudgets({name:'', amount:'', id:uniqid()})
   }
 
-  const submitExpense = (e) => {
-    e.preventDefault()
+
+  const submitExpense = () => {
     setExpensesArray(prevArray => [...prevArray, expense])
+    //need to find a way to get the id of current budget that is being modified
+    //Then add the expense to the expense object of the budget
+    setBudgets(prevBudget => (prevBudget.expense.concat(expensesArray)))
     setExpense({name: '', cost:'', id:uniqid()})
   }
 
+  const openExpenseModal = (id) => {
+    setAddExpenseModal(true);
+    setTestId(id);
+    console.log(id);
+  }
+
   useEffect(() => {
-    console.log(expensesArray);
+    console.log(testId);
   })
 
   return(
@@ -67,9 +77,9 @@ const App = () => {
 
       {isOpen && <CreateBudgetModal isOpen={isOpen} setIsOpen={setIsOpen} handleChange={handleChange} budgets={budgets} handleBudgetSubmit={handleBudgetSubmit}/>}
 
-      {addExpenseModal && <AddExpenseModal expense={expense} addExpenseModal={addExpenseModal} setAddExpenseModal={setAddExpenseModal} submitExpense={submitExpense}/>}
+      {addExpenseModal && <AddExpenseModal expense={expense} addExpenseModal={addExpenseModal} setAddExpenseModal={setAddExpenseModal} handleChange={handleChange} submitExpense={submitExpense} budgets={budgets}/>}
 
-      <BudgetCard budgetArray={budgetArray} setAddExpenseModal={setAddExpenseModal} setViewExpenseModal={setViewExpenseModal}/>
+      <BudgetCard budgetArray={budgetArray} openExpenseModal={openExpenseModal}/>
     </Container>
   )
 }
