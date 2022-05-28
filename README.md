@@ -1,7 +1,3 @@
 # budget
 
-Add Budgets
-Add expenses
-
-get total expenses
-get total budget
+A simple budget app...built to help me become better at react
