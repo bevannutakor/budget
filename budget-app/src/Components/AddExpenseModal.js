@@ -1,7 +1,7 @@
 import {Form, Button, Modal} from 'react-bootstrap';
 
 const AddExpenseModal = (props) => {
-    const {addExpenseModal, setAddExpenseModal, handleChange, submitExpense,expense, budgets} = props;
+    const {addExpenseModal, setAddExpenseModal, handleChange, submitExpense,expense} = props;
     return(
         <>
             <Form>
@@ -13,11 +13,11 @@ const AddExpenseModal = (props) => {
                         <Form.Group>
                             <Form.Label>Expense Name</Form.Label>
                             <Form.Control 
-                                name="expense" 
+                                name="description" 
                                 onChange={handleChange}
                                 type="text"
                                 value={expense.name} 
-                                placeholder="Enter Budget Name"
+                                placeholder="Describe Expense"
                             />
                         </Form.Group>
 
@@ -28,7 +28,7 @@ const AddExpenseModal = (props) => {
                                 onChange={handleChange}
                                 value={expense.cost}
                                 type="number" 
-                                placeholder="Enter Amount"/>
+                                placeholder="Enter Cost"/>
                         </Form.Group>
                     </Modal.Body>
                     <Modal.Footer>

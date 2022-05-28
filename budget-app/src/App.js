@@ -7,27 +7,27 @@ import CreateBudgetModal from './Components/CreateBudgetModal';
 import useLocalStorage from './Hooks/useLocalStorage';
 import BudgetCard from './Components/BudgetCard';
 import AddExpenseModal from './Components/AddExpenseModal';
+import ExpenseView from './Components/ExpenseView';
 
 const App = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [addExpenseModal, setAddExpenseModal] = useState(false);
   const [viewExpenseModal, setViewExpenseModal] = useState(false);
-  const [testId, setTestId] = useState(''); 
-
+  const [currentId, setCurrentId] = useState(''); 
   const [budgetArray, setBudgetArray] = useLocalStorage('budgets', []);
-  const [expensesArray, setExpensesArray] = useState([])
 
   const [budgets, setBudgets] = useState({
     name: '',
     amount: 0,
     id: uniqid(),
-    expenses: []
+    expensesArray: [],
+    expenseTotal: 0
   });
 
   const [expense, setExpense] = useState({
-    expense: '',
+    description: '',
     cost: 0,
-    id: uniqid() //needed for the view
+    id: uniqid()
   })
 
   const handleChange = (e) => {
@@ -44,42 +44,51 @@ const App = () => {
 
   const handleBudgetSubmit = (e) => {
     e.preventDefault()
-    setBudgetArray(prevArray => [...prevArray, budgets])
-    setBudgets({name:'', amount:'', id:uniqid()})
-  }
-
-
-  const submitExpense = () => {
-    setExpensesArray(prevArray => [...prevArray, expense])
-    //need to find a way to get the id of current budget that is being modified
-    //Then add the expense to the expense object of the budget
-    setBudgets(prevBudget => (prevBudget.expense.concat(expensesArray)))
-    setExpense({name: '', cost:'', id:uniqid()})
+    setBudgetArray(prevBudgets => [...prevBudgets, budgets])
+    setBudgets({name:'', amount:'', id:uniqid(), expensesArray: []})
+    setExpense({description: '', cost:'', id:uniqid()});
   }
 
   const openExpenseModal = (id) => {
     setAddExpenseModal(true);
-    setTestId(id);
-    console.log(id);
+    setCurrentId(id);
   }
 
-  useEffect(() => {
-    console.log(testId);
-  })
+  const viewAllExpenses = (id) => {
+    setViewExpenseModal(true);
+    setCurrentId(id);
+  }
+
+  const submitExpense = (e) => {
+    e.preventDefault()
+    let updateBudgetList = budgetArray.map(budgets => {
+      if(budgets.id === currentId){
+        let currentExpenses = budgets.expensesArray
+        let expenseTotal = budgets.expenseTotal
+        return {...budgets, expensesArray: [...currentExpenses, expense], expenseTotal: Number(expenseTotal) + Number(expense.cost)};
+      } else {
+        return budgets;
+      }
+    })
+
+    setBudgetArray(updateBudgetList);
+    setExpense({description: '', cost:'', id:uniqid()});
+  }
 
   return(
     <Container className="my-4">
       <Stack direction="horizontal" gap="2" className="mb-4">
         <h1 className="me-auto">Budgets</h1>
-        <Button variant="primary" onClick={() => setIsOpen(true)}>Add Budget</Button>
-        <Button variant="outline-primary">Add Expense</Button>
+        <Button variant="primary" onClick={() => setIsOpen(true)}>Add New Budget</Button>
       </Stack>
 
       {isOpen && <CreateBudgetModal isOpen={isOpen} setIsOpen={setIsOpen} handleChange={handleChange} budgets={budgets} handleBudgetSubmit={handleBudgetSubmit}/>}
 
-      {addExpenseModal && <AddExpenseModal expense={expense} addExpenseModal={addExpenseModal} setAddExpenseModal={setAddExpenseModal} handleChange={handleChange} submitExpense={submitExpense} budgets={budgets}/>}
+      {addExpenseModal && <AddExpenseModal expense={expense} addExpenseModal={addExpenseModal} setAddExpenseModal={setAddExpenseModal} handleChange={handleChange} submitExpense={submitExpense}/>}
 
-      <BudgetCard budgetArray={budgetArray} openExpenseModal={openExpenseModal}/>
+      {viewExpenseModal && <ExpenseView budgetArray={budgetArray} viewExpenseModal={viewExpenseModal} setViewExpenseModal={setViewExpenseModal} currentId={currentId}/>}
+
+      <BudgetCard budgetArray={budgetArray} openExpenseModal={openExpenseModal} viewAllExpenses={viewAllExpenses}/>
     </Container>
   )
 }
