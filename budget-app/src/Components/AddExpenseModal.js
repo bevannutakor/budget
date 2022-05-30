@@ -4,7 +4,7 @@ const AddExpenseModal = (props) => {
     const {addExpenseModal, setAddExpenseModal, handleChange, submitExpense,expense} = props;
     return(
         <>
-            <Form>
+            <Form autoComplete="off">
                 <Modal show={addExpenseModal} onHide={() => setAddExpenseModal(false)}>
                     <Modal.Header closeButton>
                         <Modal.Title>New Expense</Modal.Title>
@@ -16,7 +16,8 @@ const AddExpenseModal = (props) => {
                                 name="description" 
                                 onChange={handleChange}
                                 type="text"
-                                value={expense.name} 
+                                value={expense.name}
+                                autoComplete="false" 
                                 placeholder="Describe Expense"
                             />
                         </Form.Group>
@@ -27,7 +28,8 @@ const AddExpenseModal = (props) => {
                                 name="cost"
                                 onChange={handleChange}
                                 value={expense.cost}
-                                type="number" 
+                                type="number"
+                                autoComplete="false" 
                                 placeholder="Enter Cost"/>
                         </Form.Group>
                     </Modal.Body>

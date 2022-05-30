@@ -45,7 +45,7 @@ const App = () => {
   const handleBudgetSubmit = (e) => {
     e.preventDefault()
     setBudgetArray(prevBudgets => [...prevBudgets, budgets])
-    setBudgets({name:'', amount:'', id:uniqid(), expensesArray: []})
+    setBudgets({name:'', amount:'', id:uniqid(), expensesArray: [], expenseTotal: 0})
     setExpense({description: '', cost:'', id:uniqid()});
   }
 
@@ -63,9 +63,14 @@ const App = () => {
     e.preventDefault()
     let updateBudgetList = budgetArray.map(budgets => {
       if(budgets.id === currentId){
-        let currentExpenses = budgets.expensesArray
-        let expenseTotal = budgets.expenseTotal
-        return {...budgets, expensesArray: [...currentExpenses, expense], expenseTotal: Number(expenseTotal) + Number(expense.cost)};
+        if(budgets.expenseTotal >= budgets.amount){
+          alert("Expense exceeds budget");
+          return budgets;
+        } else {
+            let currentExpenses = budgets.expensesArray
+            let expenseTotal = budgets.expenseTotal
+            return {...budgets, expensesArray: [...currentExpenses, expense], expenseTotal: Number(expenseTotal) + Number(expense.cost)};
+        }
       } else {
         return budgets;
       }
@@ -75,10 +80,33 @@ const App = () => {
     setExpense({description: '', cost:'', id:uniqid()});
   }
 
+  const deleteBudget = (id) => {
+    setBudgetArray(prevArray => prevArray.filter(el => el.id !== id))
+  }
+
+  const removeExpense = (id) => {
+    let currentBudget = budgetArray.find(budgets => budgets.id === currentId)
+    let updateExpense = currentBudget.expensesArray.filter(el => el.id !== id)
+
+    //to subtract amount from total
+    let deleteExpense = currentBudget.expensesArray.filter(el => el.id === id) 
+    
+    let updateBudgets = budgetArray.map(budgets => {
+      if(budgets.id === currentId){
+        let expenseTotal = budgets.expenseTotal
+
+        return {...budgets, expensesArray: updateExpense, expenseTotal: Number(expenseTotal) - Number(deleteExpense[0].cost)}
+      } else{
+        return budgets
+      }
+    })
+    setBudgetArray(updateBudgets);
+  }
+
   return(
     <Container className="my-4">
       <Stack direction="horizontal" gap="2" className="mb-4">
-        <h1 className="me-auto">Budgets</h1>
+        <h1 className="me-auto">Budget Manager</h1>
         <Button variant="primary" onClick={() => setIsOpen(true)}>Add New Budget</Button>
       </Stack>
 
@@ -86,9 +114,9 @@ const App = () => {
 
       {addExpenseModal && <AddExpenseModal expense={expense} addExpenseModal={addExpenseModal} setAddExpenseModal={setAddExpenseModal} handleChange={handleChange} submitExpense={submitExpense}/>}
 
-      {viewExpenseModal && <ExpenseView budgetArray={budgetArray} viewExpenseModal={viewExpenseModal} setViewExpenseModal={setViewExpenseModal} currentId={currentId}/>}
+      {viewExpenseModal && <ExpenseView budgetArray={budgetArray} viewExpenseModal={viewExpenseModal} setViewExpenseModal={setViewExpenseModal} currentId={currentId} removeExpense={removeExpense}/>}
 
-      <BudgetCard budgetArray={budgetArray} openExpenseModal={openExpenseModal} viewAllExpenses={viewAllExpenses}/>
+      <BudgetCard budgetArray={budgetArray} openExpenseModal={openExpenseModal} viewAllExpenses={viewAllExpenses} deleteBudget={deleteBudget}/>
     </Container>
   )
 }

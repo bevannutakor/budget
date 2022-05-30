@@ -4,7 +4,7 @@ const CreateBudgetModal = (props) => {
     const {isOpen, setIsOpen, budgets, handleChange, handleBudgetSubmit} = props;
     return(
         <>
-            <Form>
+            <Form autoComplete="off">
                 <Modal show={isOpen} onHide={() => setIsOpen(false)}>
                     <Modal.Header closeButton>
                         <Modal.Title>New Budget</Modal.Title>
@@ -16,7 +16,8 @@ const CreateBudgetModal = (props) => {
                                 name="name" 
                                 onChange={handleChange} 
                                 value={budgets.name}  
-                                type="text" 
+                                type="text"
+                                autoComplete="false" 
                                 placeholder="Enter Budget Name"
                             />
                         </Form.Group>
@@ -27,7 +28,8 @@ const CreateBudgetModal = (props) => {
                                 name="amount"
                                 onChange={handleChange}
                                 value={budgets.amount} 
-                                type="number" 
+                                type="number"
+                                autoComplete="false" 
                                 placeholder="Enter Amount"/>
                         </Form.Group>
                     </Modal.Body>

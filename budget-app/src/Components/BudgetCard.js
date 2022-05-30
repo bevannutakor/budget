@@ -1,7 +1,7 @@
 import {Card, Button, Container, Row, Col, Stack, ProgressBar} from 'react-bootstrap'
 
 const BudgetCard = (props) => {
-    const {budgetArray, openExpenseModal, viewAllExpenses} = props;
+    const {budgetArray, openExpenseModal, viewAllExpenses, deleteBudget} = props;
 
     return(
         <Container>
@@ -15,15 +15,23 @@ const BudgetCard = (props) => {
                                         <Card.Title className="me-auto">{budgets.name}</Card.Title>
                                         <Card.Subtitle>${parseFloat(budgets.expenseTotal)} / ${parseFloat(budgets.amount)}</Card.Subtitle>
                                     </Stack>
-                                    <ProgressBar now={budgets.expenseTotal} />
+                                    <ProgressBar now={(budgets.expenseTotal/budgets.amount)*100}/>
                                 </Card.Body>
                                 <Card.Footer>
                                     <Stack direction="horizontal" gap="2" className="mt-3">
                                         <Button onClick={() => openExpenseModal(budgets.id)}>Add Expense</Button>
+
                                         <Button 
-                                            className="float-end" variant="outline-primary"
+                                             variant="outline-primary"
                                             onClick={() => viewAllExpenses(budgets.id)}>
                                             View Expenses
+                                        </Button>
+
+                                        <Button 
+                                            variant="outline-danger"
+                                            onClick={() => deleteBudget(budgets.id)}
+                                            >
+                                            Delete Budget
                                         </Button>
                                     </Stack>
                                 </Card.Footer>
